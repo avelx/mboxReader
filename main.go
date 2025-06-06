@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -24,11 +25,26 @@ func main() {
 	scanner.Buffer(buf, 1024*1024)
 
 	var emailsNumber int = 0
+	var b strings.Builder
+	var emailSeparator string = "From "
 	for scanner.Scan() {
 		line := scanner.Text()
-		if strings.HasPrefix(line, "From:") {
+		if strings.HasPrefix(line, emailSeparator) {
 			emailsNumber += 1
-			fmt.Printf("%s\n", line)
+			var fileName string = "/Users/pavel/devcore/plaground/mboxReader/data/email-" + strconv.Itoa(emailsNumber) + ".txt"
+
+			//fmt.Printf("%s\n\n", b.String())
+
+			err := os.WriteFile(fileName, []byte(b.String()), 0644)
+			if err != nil {
+				panic(err)
+			}
+			// Start new email string accumulation
+			b.Reset()
+			b.Write([]byte(line + "\n"))
+		} else {
+			// buffer all lines scanned
+			b.Write([]byte(line + "\n"))
 		}
 	}
 	if err := scanner.Err(); err != nil {
