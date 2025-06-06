@@ -10,6 +10,7 @@ import (
 
 func main() {
 	var path string = "/Users/pavel/devcore/DataStore/all_mail.mbox"
+	var processedEmails string = "/Users/pavel/devcore/DataStore/mails/"
 
 	f, err := os.Open(path)
 	if err != nil {
@@ -31,8 +32,7 @@ func main() {
 		line := scanner.Text()
 		if strings.HasPrefix(line, emailSeparator) {
 			emailsNumber += 1
-			var fileName string = "/Users/pavel/devcore/plaground/mboxReader/data/email-" + strconv.Itoa(emailsNumber) + ".txt"
-
+			var fileName string = processedEmails + "/email-" + strconv.Itoa(emailsNumber) + ".txt"
 			//fmt.Printf("%s\n\n", b.String())
 
 			err := os.WriteFile(fileName, []byte(b.String()), 0644)
